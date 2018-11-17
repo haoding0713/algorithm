@@ -1,0 +1,52 @@
+package main.sorting;
+
+import java.util.Arrays;
+
+/**
+ * 非交换的排序的优点是效率高;
+ * 缺点是对于入参需要是整型，同时入参的规模一旦变大，需要较多的空间
+ *
+ *
+ */
+public class CountingSort {
+
+    public static final Integer SIZE = 15;
+
+    public static final Integer RANGE = 100;
+
+    public static void main(String[] args) {
+
+        final RandomSeed seed = new RandomSeed(SIZE);
+        Integer[] input = seed.getRandomSeedForSorting(RANGE);
+
+        for (Integer i : input) {
+            System.out.print(i + ", ");
+        }
+
+        System.out.println("After Sort :");
+        Integer[] result = countSort(input, RANGE);
+        for (Integer integer : result) {
+            System.out.print(integer + ", ");
+        }
+    }
+
+
+    public static Integer[] countSort(Integer[] data, Integer range) {
+        int[] counter = new int[range];
+        for (Integer item : data) {
+            counter[item] += 1;
+        }
+
+        Integer[] result = new Integer[data.length];
+        int pos = 0;
+        for (int k = 0; k < counter.length; k++) {
+            if(counter[k] > 0) {
+                for(int i = 0; i < counter[k]; i++ ){
+                    result[pos++] = k;
+                }
+            }
+        }
+
+        return result;
+    }
+}
