@@ -154,6 +154,95 @@ public class AVLTree<K extends Comparable<K>, V>{
      */
     private void delete(K key) {
         // TODO: DELETE PART
+        if (key == null) {
+            throw new IllegalArgumentException("argument to delete() is null");
+        }
+        if (!this.contains(root, key)) {
+            return;
+        }
+        root = delete(root, key);
+    }
+
+
+    /**
+     * 在子树中，删除Key
+     * @param x
+     * @param key
+     * @return
+     */
+    private Node delete(Node x, K key) {
+        int cmp = key.compareTo(x.key);
+        if (cmp < 0) {
+            x.left = delete(x.left, key);
+        }
+        else if (cmp > 0) {
+            x.right = delete(x.right, key);
+        }
+        else {
+            if (x.left == null) {
+                return x.right;
+            }
+            else if (x.right == null) {
+                return x.left;
+            }
+            else {
+                Node y = x;
+                x = min(y.right);
+                x.right = deleteMin(y.right);
+                x.left = y.left;
+            }
+        }
+        x.size = 1 + size(x.left) + size(x.right);
+        x.height = 1 + Math.max(height(x.left), height(x.right));
+        return balance(x);
+    }
+
+
+    /**
+     * Returns the node with the smallest key in the subtree.
+     *
+     * @param x the subtree
+     * @return the node with the smallest key in the subtree
+     */
+    private Node min(Node x) {
+        if (x.left == null) return x;
+        return min(x.left);
+    }
+
+
+    /**
+     * 在子树中，删除最小的Key以及对应的Value
+     * @param x
+     * @return
+     */
+    private Node deleteMin(Node x) {
+        if (x.left == null) return x.right;
+        x.left = deleteMin(x.left);
+        x.size = 1 + size(x.left) + size(x.right);
+        x.height = 1 + Math.max(height(x.left), height(x.right));
+        return balance(x);
+    }
+
+    /**
+     * 查找是否存在Key
+     * @param node
+     * @param key
+     * @return
+     */
+    private boolean contains(Node node, K key) {
+        if (node == null) {
+            return false;
+        }
+        int cmp = key.compareTo(node.key);
+        if(cmp == 0) {
+            return true;
+
+        } else if (cmp < 0) {
+            return contains(node.left, key);
+
+        } else {
+            return contains(node.right, key);
+        }
     }
 
 
